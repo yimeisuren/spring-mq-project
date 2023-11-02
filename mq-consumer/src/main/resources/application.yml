@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: mq-consumer
+  rabbitmq:
+    host: myLinux
+    username: root
+    password: root
+    port: 5672
+    # 虚拟主机，相当于命名空间，用于隔离交换机和队列
+    virtual-host: /spring-rabbitmq
+    listener:
+      simple:
+        # 消息预取数量，一次只能获取prefetch条消息，处理完之后才能获取
+        # prefetch设置为1，能够让具有不同消息处理能力的接收者按自己的处理速度来获取消息（能者多劳模式）
+        prefetch: 1
+        acknowledge-mode: none

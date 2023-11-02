@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: mq-producer
+  rabbitmq:
+    host: myLinux
+    username: root
+    password: root
+    port: 5672
+    # 虚拟主机，相当于命名空间，用于隔离交换机和队列
+    virtual-host: /spring-rabbitmq
+
+    # 消费者的配置（重试机制等）
+    listener:
+      simple:
+        # 消息预取数量，一次只能获取prefetch条消息，处理完之后才能获取
+        # prefetch设置为1，能够让具有不同消息处理能力的接收者按自己的处理速度来获取消息（能者多劳模式）
+        prefetch: 1
+
+    # 连接超时间隔（心跳机制）
+    connection-timeout: 1s
+    # 发送者的重试机制
+    template:
+      retry:
+        enabled: true
+        # 第一次重试时间间隔
+        initial-interval: 1000ms
+        # 下一次重试时间间隔 = 本次重试时间间隔 * multiplier系数
+        multiplier: 1
+        # 最大重试次数
+        max-attempts: 3
+
+#    # 表示接收返回值的方式。none：不接收返回值（不开启）、simple：同步阻塞、correlated：异步回调
+#    publisher-confirm-type: correlated
+#    # 由于路由失败导致的，而路由失败一般是开发人员自身的原因造成的，所以一般不需要开启，这里是为了进行测试
+#    publisher-returns: true
